@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>診断へ移動中…</title>
+</head>
+<body>
+  <p>診断ページへ移動しています…</p>
+
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script>
+    const LIFF_ID = "2008933375-DWTa5Pv0";
+    const PREFILL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckk3iomfzetFjYC_8qb78Oh0fX9zyktOGqLGNucI_lQ0T4Ww/viewform?usp=pp_url&entry.387322602=TEST";
+
+    async function main() {
+      await liff.init({ liffId: LIFF_ID });
+
+      if (!liff.isLoggedIn()) {
+        liff.login();
+        return;
+      }
+
+      const profile = await liff.getProfile();
+      const userId = profile.userId;
+
+      const url = PREFILL_URL.replace("TEST", encodeURIComponent(userId));
+      location.replace(url);
+    }
+
+    main().catch(err => {
+      document.body.innerHTML =
+        "<p>エラーが発生しました</p><pre>" + err + "</pre>";
+    });
+  </script>
+</body>
+</html>
