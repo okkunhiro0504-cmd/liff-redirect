@@ -17,16 +17,37 @@
     .grid{ display:grid; grid-template-columns: 1fr; gap: 12px; }
     @media (min-width: 760px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
 
+    /* ====== おすすめA：選択カードを暗め＋左バーで強調（＋アニメ） ====== */
     .card{
       border: 1px solid #ddd;
       border-radius: 16px;
       padding: 14px;
       background:#fff;
       box-shadow: 0 1px 0 rgba(0,0,0,.02);
+      transition: background .2s ease, border-color .2s ease, box-shadow .2s ease, filter .2s ease, opacity .2s ease;
     }
     .card.selected{
       border-color:#111;
-      box-shadow: 0 10px 24px rgba(0,0,0,.10);
+      background: #f1f3f6;                 /* 少し暗く */
+      box-shadow: 0 12px 28px rgba(0,0,0,.14);
+      filter: saturate(.95);               /* 落ち着かせる */
+      position: relative;
+    }
+    .card.selected::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:12px;
+      bottom:12px;
+      width:6px;
+      border-radius: 999px;
+      background:#111;                     /* 左の太線 */
+    }
+
+    /* ====== 選択されたカード以外を少し薄く ====== */
+    .grid.hasSelection .card:not(.selected){
+      opacity: .85;
+      filter: saturate(.92);
     }
 
     .tag{ font-size: 12px; color:#666; margin-bottom: 8px; }
@@ -129,7 +150,7 @@
       各カードを開いて内容を読んだら、<strong>「この暮らしを選ぶ」</strong>を押してください。
     </p>
 
-    <div class="grid">
+    <div class="grid" id="grid">
 
       <!-- 都会 -->
       <div class="card" id="card-city">
@@ -182,7 +203,7 @@
 
             <div class="accept">このデメリット、受け入れられますか？</div>
 
-            <button class="pickBtn" type="button" onclick="pick('city')">この暮らしを選ぶ</button>         
+            <button class="pickBtn" type="button" onclick="pick('city')">この暮らしを選ぶ</button>
           </div>
         </details>
       </div>
@@ -237,7 +258,8 @@
 
             <div class="accept">このデメリット、受け入れられますか？</div>
 
-            <button class="pickBtn" type="button" onclick="pick('city')">この暮らしを選ぶ</button>
+            <!-- ★ここは middle を渡すのが正解 -->
+            <button class="pickBtn" type="button" onclick="pick('middle')">この暮らしを選ぶ</button>
           </div>
         </details>
       </div>
@@ -293,7 +315,8 @@
 
             <div class="accept">このデメリット、受け入れられますか？</div>
 
-            <button class="pickBtn" type="button" onclick="pick('city')">この暮らしを選ぶ</button>
+            <!-- ★ここは rural を渡すのが正解 -->
+            <button class="pickBtn" type="button" onclick="pick('rural')">この暮らしを選ぶ</button>
           </div>
         </details>
       </div>
@@ -316,8 +339,6 @@
     const LIFF_ID = "2008933375-DWTa5Pv0";
 
     // Googleフォーム（事前入力URL）
-    // entry.387322602 は「LINEユーザーID」受け皿（あなたの現状）
-    // ★ entry.2055596408 は「暮らしタイプ」受け皿（必ず置き換え）
     const FORM_BASE =
       "https://docs.google.com/forms/d/e/1FAIpQLSckk3iomfzetFjYC_8qb78Oh0fX9zyktOGqLGNucI_lQ0T4Ww/viewform?usp=pp_url" +
       "&entry.387322602={{USER_ID}}" +
@@ -350,6 +371,9 @@
       highlightSelected();
       document.getElementById("continueBtn").disabled = false;
       setError(null);
+
+      // ★選択されたカード以外を薄くする（class付与）
+      document.getElementById("grid")?.classList.add("hasSelection");
 
       // 選択したカードが画面内に収まるように少しスクロール（任意）
       const card = document.getElementById("card-" + type);
