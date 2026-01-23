@@ -367,18 +367,47 @@
     }
 
     function pick(type){
-      selected = type;
-      highlightSelected();
-      document.getElementById("continueBtn").disabled = false;
-      setError(null);
+  selected = type;
+  setError(null);
 
-      // ★選択されたカード以外を薄くする（class付与）
-      document.getElementById("grid")?.classList.add("hasSelection");
+  // 見た目：選択カードを強調
+  highlightSelected();
 
-      // 選択したカードが画面内に収まるように少しスクロール（任意）
-      const card = document.getElementById("card-" + type);
-      if (card) card.scrollIntoView({behavior:"smooth", block:"center"});
+  // 他カードを薄くする
+  document.getElementById("grid")?.classList.add("hasSelection");
+
+  // 「診断を続ける」を有効化
+  document.getElementById("continueBtn").disabled = false;
+
+  // ★ボタン表示を全てリセット（切り替えできない感を消す）
+  document.querySelectorAll(".card").forEach(card => {
+    const btn = card.querySelector(".pickBtn");
+    if (btn){
+      btn.textContent = "この暮らしを選ぶ";
+      btn.disabled = false;       // いつでも切替可能
+      btn.style.opacity = "";
     }
+  });
+
+  // ★選んだカードだけボタンを「選択中」にする
+  const selectedCard = document.getElementById("card-" + type);
+  if (selectedCard){
+    const btn = selectedCard.querySelector(".pickBtn");
+    if (btn){
+      btn.textContent = "選択中 ✓";
+      btn.disabled = true;        // 同じカードの連打防止（切替は別カードで可能）
+      btn.style.opacity = "0.75";
+    }
+  }
+
+  // ★他の details を自動で閉じる（誤タップやスクロール事故防止）
+  document.querySelectorAll(".card details").forEach(d => d.open = false);
+  if (selectedCard){
+    const details = selectedCard.querySelector("details");
+    if (details) details.open = true; // 選んだカードだけ開く（好みで消してOK）
+    selectedCard.scrollIntoView({behavior:"smooth", block:"center"});
+  }
+}
 
     async function initLiff(){
       await liff.init({ liffId: LIFF_ID });
