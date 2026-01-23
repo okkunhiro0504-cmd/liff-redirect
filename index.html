@@ -3,17 +3,148 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>診断へ移動中…</title>
+  <title>暮らしタイプ選択｜北海道移住診断</title>
+  <style>
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; margin: 0; padding: 16px; line-height: 1.6; }
+    .wrap { max-width: 760px; margin: 0 auto; }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    .sub { color: #555; font-size: 14px; margin: 0 0 16px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 680px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    .card {
+      border: 1px solid #ddd; border-radius: 14px; padding: 14px;
+      cursor: pointer; user-select: none;
+      transition: transform .05s ease, border-color .2s ease, box-shadow .2s ease;
+      background: #fff;
+    }
+    .card:hover { transform: translateY(-1px); }
+    .card.selected { border-color: #111; box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+    .tag { font-size: 12px; color: #666; margin-bottom: 6px; }
+    .ttl { font-size: 16px; margin: 0 0 6px; }
+    .desc { font-size: 13px; color: #444; margin: 0; }
+    details { margin-top: 10px; }
+    summary { cursor: pointer; font-size: 13px; color: #111; }
+    .detail { font-size: 13px; color: #333; margin-top: 8px; }
+    .detail ul { margin: 6px 0 0 18px; padding: 0; }
+    .ctaBox { margin-top: 18px; padding: 14px; border-radius: 14px; background: #f6f7f9; }
+    .note { font-size: 13px; color: #333; margin: 0 0 10px; }
+    button {
+      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #111;
+      background: #111; color: #fff; font-size: 16px; cursor: pointer;
+    }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .small { font-size: 12px; color: #666; margin-top: 8px; }
+    .err { color: #b00020; font-size: 13px; margin-top: 10px; }
+  </style>
 </head>
 <body>
-  <p>診断ページへ移動しています…</p>
+  <div class="wrap">
+    <h1>あなたが目指す暮らしはどれ？</h1>
+    <p class="sub">
+      まずは「都会／田舎／ちょうど良い暮らし」の中から、いちばん近いものを選んでください。
+      タップすると詳細が開きます。
+    </p>
+
+    <div class="grid">
+      <div class="card" data-type="city" onclick="selectType('city')">
+        <div class="tag">🏙 都会暮らし</div>
+        <h2 class="ttl">便利さと選択肢を優先</h2>
+        <p class="desc">仕事・医療・買い物が整った暮らし。</p>
+        <details>
+          <summary>メリット・デメリットを見る</summary>
+          <div class="detail">
+            <b>メリット</b>
+            <ul>
+              <li>病院・買い物・交通の不安が少ない</li>
+              <li>外食・娯楽・仕事の選択肢が多い</li>
+            </ul>
+            <b>デメリット</b>
+            <ul>
+              <li>家賃や物価が高め</li>
+              <li>人が多く、静けさは少なめ</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="card" data-type="middle" onclick="selectType('middle')">
+        <div class="tag">🌱 ちょうど良い暮らし</div>
+        <h2 class="ttl">便利さと自然のバランス</h2>
+        <p class="desc">日常は快適、週末は自然も楽しめる。</p>
+        <details>
+          <summary>メリット・デメリットを見る</summary>
+          <div class="detail">
+            <b>メリット</b>
+            <ul>
+              <li>生活の不便が少なく、自然も近い</li>
+              <li>子育て・趣味との相性が良い</li>
+            </ul>
+            <b>デメリット</b>
+            <ul>
+              <li>都会ほど便利ではない</li>
+              <li>田舎ほど自然に没入できない</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+
+      <div class="card" data-type="rural" onclick="selectType('rural')">
+        <div class="tag">🌾 田舎暮らし</div>
+        <h2 class="ttl">自然と静けさを最優先</h2>
+        <p class="desc">ゆっくりした時間と自然の近さ。</p>
+        <details>
+          <summary>メリット・デメリットを見る</summary>
+          <div class="detail">
+            <b>メリット</b>
+            <ul>
+              <li>自然が日常の中にある</li>
+              <li>家賃・土地が比較的安い</li>
+            </ul>
+            <b>デメリット</b>
+            <ul>
+              <li>車が必須になりやすい</li>
+              <li>買い物・医療・仕事の選択肢は少なめ</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="ctaBox">
+      <p class="note">
+        次の画面では、あなたに合う街を絞り込むための<strong>簡単な質問</strong>にお答えください。
+        <br><span class="small">※見た目がシンプルな質問画面（Googleフォーム）に移動しますが、診断は続いています。</span>
+      </p>
+      <button id="btn" onclick="goToForm()" disabled>▶ 診断を続ける</button>
+      <div id="err" class="err" style="display:none;"></div>
+    </div>
+  </div>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
+    // あなたのLIFF ID（今のまま）
     const LIFF_ID = "2008933375-DWTa5Pv0";
-    const PREFILL_URL = "https://docs.google.com/forms/d/e/1FAIpQLSckk3iomfzetFjYC_8qb78Oh0fX9zyktOGqLGNucI_lQ0T4Ww/viewform?usp=pp_url&entry.387322602=TEST";
 
-    async function main() {
+    // Googleフォーム（事前入力URL）
+    // entry.387322602 は「LINEユーザーID」受け皿（あなたの現状のまま）
+    // ★ entry.2055596408 は「暮らしタイプ」受け皿（あなたが追加で取得して入れる）
+    const FORM_BASE =
+      "https://docs.google.com/forms/d/e/1FAIpQLSckk3iomfzetFjYC_8qb78Oh0fX9zyktOGqLGNucI_lQ0T4Ww/viewform?usp=pp_url" +
+      "&entry.387322602={{USER_ID}}" +
+      "&entry.2055596408={{LIFESTYLE}}";
+
+    let selected = null;
+    let userId = null;
+
+    function selectType(type) {
+      selected = type;
+      document.querySelectorAll(".card").forEach(c => {
+        c.classList.toggle("selected", c.dataset.type === type);
+      });
+      document.getElementById("btn").disabled = false;
+    }
+
+    async function initLiff() {
       await liff.init({ liffId: LIFF_ID });
 
       if (!liff.isLoggedIn()) {
@@ -22,15 +153,36 @@
       }
 
       const profile = await liff.getProfile();
-      const userId = profile.userId;
-
-      const url = PREFILL_URL.replace("TEST", encodeURIComponent(userId));
-      location.replace(url);
+      userId = profile.userId;
     }
 
-    main().catch(err => {
-      document.body.innerHTML =
-        "<p>エラーが発生しました</p><pre>" + err + "</pre>";
+    function goToForm() {
+      const errEl = document.getElementById("err");
+      errEl.style.display = "none";
+      errEl.textContent = "";
+
+      if (!userId) {
+        errEl.textContent = "LINEの認証情報が取得できませんでした。少し待ってからもう一度お試しください。";
+        errEl.style.display = "block";
+        return;
+      }
+      if (!selected) {
+        errEl.textContent = "暮らしタイプを選んでください。";
+        errEl.style.display = "block";
+        return;
+      }
+
+      const url = FORM_BASE
+        .replace("{{USER_ID}}", encodeURIComponent(userId))
+        .replace("{{LIFESTYLE}}", encodeURIComponent(selected));
+
+      location.href = url;
+    }
+
+    initLiff().catch(err => {
+      const errEl = document.getElementById("err");
+      errEl.textContent = "エラーが発生しました： " + err;
+      errEl.style.display = "block";
     });
   </script>
 </body>
