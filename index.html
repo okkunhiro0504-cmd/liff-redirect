@@ -4,150 +4,362 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>暮らしタイプ選択｜北海道移住診断</title>
+
   <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif; margin: 0; padding: 16px; line-height: 1.6; }
-    .wrap { max-width: 760px; margin: 0 auto; }
-    h1 { font-size: 20px; margin: 0 0 12px; }
-    .sub { color: #555; font-size: 14px; margin: 0 0 16px; }
-    .grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 680px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-    .card {
-      border: 1px solid #ddd; border-radius: 14px; padding: 14px;
-      cursor: pointer; user-select: none;
-      transition: transform .05s ease, border-color .2s ease, box-shadow .2s ease;
-      background: #fff;
+    body{
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
+      margin:0; padding:16px; line-height:1.6; background:#fff;
     }
-    .card:hover { transform: translateY(-1px); }
-    .card.selected { border-color: #111; box-shadow: 0 6px 18px rgba(0,0,0,.08); }
-    .tag { font-size: 12px; color: #666; margin-bottom: 6px; }
-    .ttl { font-size: 16px; margin: 0 0 6px; }
-    .desc { font-size: 13px; color: #444; margin: 0; }
-    details { margin-top: 10px; }
-    summary { cursor: pointer; font-size: 13px; color: #111; }
-    .detail { font-size: 13px; color: #333; margin-top: 8px; }
-    .detail ul { margin: 6px 0 0 18px; padding: 0; }
-    .ctaBox { margin-top: 18px; padding: 14px; border-radius: 14px; background: #f6f7f9; }
-    .note { font-size: 13px; color: #333; margin: 0 0 10px; }
-    button {
-      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid #111;
-      background: #111; color: #fff; font-size: 16px; cursor: pointer;
+    .wrap{ max-width: 860px; margin: 0 auto; }
+    h1{ font-size: 20px; margin: 0 0 10px; }
+    .sub{ color:#555; font-size: 14px; margin:0 0 14px; }
+
+    .grid{ display:grid; grid-template-columns: 1fr; gap: 12px; }
+    @media (min-width: 760px){ .grid{ grid-template-columns: repeat(3, 1fr); } }
+
+    .card{
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      padding: 14px;
+      background:#fff;
+      box-shadow: 0 1px 0 rgba(0,0,0,.02);
     }
-    button:disabled { opacity: .45; cursor: not-allowed; }
-    .small { font-size: 12px; color: #666; margin-top: 8px; }
-    .err { color: #b00020; font-size: 13px; margin-top: 10px; }
+    .card.selected{
+      border-color:#111;
+      box-shadow: 0 10px 24px rgba(0,0,0,.10);
+    }
+
+    .tag{ font-size: 12px; color:#666; margin-bottom: 8px; }
+    .typeTitle{
+      font-size: 22px;
+      font-weight: 800;
+      margin: 0 0 6px;
+      letter-spacing: .02em;
+      color:#111;
+    }
+    .catch{ font-size: 14px; font-weight: 700; margin: 0 0 6px; color:#111; }
+    .caveat{ font-size: 12px; color:#555; margin: 0; }
+
+    details{ margin-top: 10px; }
+    summary{ cursor: pointer; font-size: 13px; color:#111; list-style:none; }
+    summary::-webkit-details-marker{ display:none; }
+    .summaryHint{
+      display:inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid #ddd;
+      background:#fff;
+    }
+
+    .detail{
+      margin-top: 10px;
+      font-size: 13px;
+      color:#333;
+    }
+    .secTitle{
+      margin: 12px 0 6px;
+      font-size: 13px;
+      font-weight: 800;
+      color:#111;
+    }
+    .secBody{ margin: 0; font-size: 13px; color:#333; }
+    .detail ul{ margin: 6px 0 0 18px; padding: 0; }
+    .regret{
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background:#f6f7f9;
+      font-size: 13px;
+      color:#222;
+    }
+    .accept{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid #111;
+      font-weight: 800;
+      font-size: 13px;
+      color:#111;
+      background:#fff;
+    }
+
+    .pickBtn{
+      margin-top: 12px;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #111;
+      background:#111;
+      color:#fff;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .pickBtn:active{ transform: translateY(1px); }
+
+    .ctaBox{
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
+      background:#f6f7f9;
+    }
+    .note{ font-size: 13px; color:#333; margin: 0 0 10px; }
+    .small{ font-size: 12px; color:#666; }
+    #continueBtn{
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid #111;
+      background:#111;
+      color:#fff;
+      font-size: 16px;
+      font-weight: 800;
+      cursor:pointer;
+    }
+    #continueBtn:disabled{ opacity: .45; cursor:not-allowed; }
+    .err{ color:#b00020; font-size: 13px; margin-top: 10px; }
   </style>
 </head>
+
 <body>
   <div class="wrap">
     <h1>あなたが目指す暮らしはどれ？</h1>
     <p class="sub">
-      まずは「都会／田舎／ちょうど良い暮らし」の中から、いちばん近いものを選んでください。
-      タップすると詳細が開きます。
+      まずは「都会／ちょうど良い／田舎」の中から、いちばん近いものを選んでください。<br>
+      各カードを開いて内容を読んだら、<strong>「この暮らしを選ぶ」</strong>を押してください。
     </p>
 
     <div class="grid">
-      <div class="card" data-type="city" onclick="selectType('city')">
-        <div class="tag">🏙 都会暮らし</div>
-        <h2 class="ttl">便利さと選択肢を優先</h2>
-        <p class="desc">仕事・医療・買い物が整った暮らし。</p>
+
+      <!-- 都会 -->
+      <div class="card" id="card-city">
+        <div class="tag">🏙 都会</div>
+        <h2 class="typeTitle">都会暮らし</h2>
+        <p class="catch">便利さと安心感を最優先。</p>
+        <p class="caveat">※コストと人の多さは覚悟。</p>
+
         <details>
-          <summary>メリット・デメリットを見る</summary>
+          <summary><span class="summaryHint">メリット・デメリットを見る</span></summary>
+
           <div class="detail">
-            <b>メリット</b>
-            <ul>
-              <li>病院・買い物・交通の不安が少ない</li>
-              <li>外食・娯楽・仕事の選択肢が多い</li>
+            <div class="secTitle">一言キャッチ</div>
+            <p class="secBody">便利さ・安心感・選択肢を最優先したい人向け。</p>
+
+            <div class="secTitle">日常シーン（想像）</div>
+            <p class="secBody">仕事帰りに外食や買い物を済ませ、病院や役所も近く、生活の段取りで悩むことは少なめ。刺激のある毎日です。</p>
+
+            <div class="secTitle">メリット（現実）</div>
+            <ul class="secBody">
+              <li>医療・買い物・交通の不安が少ない</li>
+              <li>仕事や外食、娯楽の選択肢が多い</li>
+              <li>雪・天候による生活への影響が比較的小さい</li>
             </ul>
-            <b>デメリット</b>
-            <ul>
-              <li>家賃や物価が高め</li>
-              <li>人が多く、静けさは少なめ</li>
+
+            <div class="secTitle">デメリット（覚悟ポイント）</div>
+            <ul class="secBody">
+              <li>家賃・物価が高く、生活コストがかかる</li>
+              <li>人が多く、騒音や混雑は日常</li>
+              <li>自然は「行くもの」になりがち</li>
+              <li>住環境よりも利便性優先になりやすい</li>
             </ul>
+
+            <div class="secTitle">向いている人</div>
+            <ul class="secBody">
+              <li>忙しくても生活の不便は避けたい</li>
+              <li>子育てや医療、仕事の安心感を重視したい</li>
+              <li>多少の騒がしさより利便性を取れる</li>
+            </ul>
+
+            <div class="secTitle">向いていない人</div>
+            <ul class="secBody">
+              <li>静かな環境で心を落ち着かせたい</li>
+              <li>自然を日常の一部として暮らしたい</li>
+              <li>生活コストをできるだけ抑えたい</li>
+            </ul>
+
+            <div class="secTitle">よくある後悔</div>
+            <div class="regret">「便利だけど、自然や静けさが恋しくなった」</div>
+
+            <div class="accept">このデメリット、受け入れられますか？</div>
+
+            <button class="pickBtn" type="button" onclick="pick('city')">この暮らしを選ぶ</button>
           </div>
         </details>
       </div>
 
-      <div class="card" data-type="middle" onclick="selectType('middle')">
-        <div class="tag">🌱 ちょうど良い暮らし</div>
-        <h2 class="ttl">便利さと自然のバランス</h2>
-        <p class="desc">日常は快適、週末は自然も楽しめる。</p>
+      <!-- ちょうど良い -->
+      <div class="card" id="card-middle">
+        <div class="tag">🌱 中間</div>
+        <h2 class="typeTitle">ちょうど良い暮らし</h2>
+        <p class="catch">便利×自然のバランス型。</p>
+        <p class="caveat">※刺激は少なめ。</p>
+
         <details>
-          <summary>メリット・デメリットを見る</summary>
+          <summary><span class="summaryHint">メリット・デメリットを見る</span></summary>
+
           <div class="detail">
-            <b>メリット</b>
-            <ul>
+            <div class="secTitle">一言キャッチ</div>
+            <p class="secBody">便利さも自然も、どちらも諦めたくない人向け。</p>
+
+            <div class="secTitle">日常シーン（想像）</div>
+            <p class="secBody">車で10〜20分圏内に買い物や病院。家の近くには公園や畑があり、週末は自然を感じられる。日常は無理なく、余白のある暮らしです。</p>
+
+            <div class="secTitle">メリット（現実）</div>
+            <ul class="secBody">
               <li>生活の不便が少なく、自然も近い</li>
-              <li>子育て・趣味との相性が良い</li>
+              <li>家賃や土地は都会より抑えめ</li>
+              <li>子育て・趣味・仕事のバランスが取りやすい</li>
             </ul>
-            <b>デメリット</b>
-            <ul>
-              <li>都会ほど便利ではない</li>
-              <li>田舎ほど自然に没入できない</li>
+
+            <div class="secTitle">デメリット（覚悟ポイント）</div>
+            <ul class="secBody">
+              <li>都会ほどの利便性や刺激はない</li>
+              <li>田舎ほど自然に没入できるわけでもない</li>
+              <li>娯楽やイベントは自分で探す必要がある</li>
+              <li>中途半端に感じる人もいる</li>
             </ul>
+
+            <div class="secTitle">向いている人</div>
+            <ul class="secBody">
+              <li>極端な暮らしは避けたい</li>
+              <li>家族・仕事・趣味をバランスよく大切にしたい</li>
+              <li>車移動に抵抗がない</li>
+            </ul>
+
+            <div class="secTitle">向いていない人</div>
+            <ul class="secBody">
+              <li>常に刺激や賑わいが欲しい</li>
+              <li>完全な自然環境での暮らしを求めている</li>
+            </ul>
+
+            <div class="secTitle">よくある後悔</div>
+            <div class="regret">「どちらにも振り切れず、少し物足りなく感じた」</div>
+
+            <div class="accept">このデメリット、受け入れられますか？</div>
+
+            <button class="pickBtn" type="button" onclick="pick('middle')">この暮らしを選ぶ</button>
           </div>
         </details>
       </div>
 
-      <div class="card" data-type="rural" onclick="selectType('rural')">
-        <div class="tag">🌾 田舎暮らし</div>
-        <h2 class="ttl">自然と静けさを最優先</h2>
-        <p class="desc">ゆっくりした時間と自然の近さ。</p>
+      <!-- 田舎 -->
+      <div class="card" id="card-rural">
+        <div class="tag">🌾 田舎</div>
+        <h2 class="typeTitle">田舎暮らし</h2>
+        <p class="catch">自然と静けさを最優先。</p>
+        <p class="caveat">※不便さと冬は覚悟。</p>
+
         <details>
-          <summary>メリット・デメリットを見る</summary>
+          <summary><span class="summaryHint">メリット・デメリットを見る</span></summary>
+
           <div class="detail">
-            <b>メリット</b>
-            <ul>
-              <li>自然が日常の中にある</li>
-              <li>家賃・土地が比較的安い</li>
+            <div class="secTitle">一言キャッチ</div>
+            <p class="secBody">不便さより、自然と静けさを優先できる人向け。</p>
+
+            <div class="secTitle">日常シーン（想像）</div>
+            <p class="secBody">家の周りは畑や森。夜は星が見え、聞こえる音は風や虫の声。季節の変化を肌で感じながら、ゆっくりと時間が流れます。</p>
+
+            <div class="secTitle">メリット（現実）</div>
+            <ul class="secBody">
+              <li>自然が日常のすぐそばにある</li>
+              <li>家賃・土地が安く、広い住環境を確保しやすい</li>
+              <li>人や情報の刺激が少なく、落ち着いた暮らし</li>
             </ul>
-            <b>デメリット</b>
-            <ul>
-              <li>車が必須になりやすい</li>
-              <li>買い物・医療・仕事の選択肢は少なめ</li>
+
+            <div class="secTitle">デメリット（覚悟ポイント）</div>
+            <ul class="secBody">
+              <li>車が必須で、移動の負担が大きい</li>
+              <li>買い物・医療・仕事の選択肢が限られる</li>
+              <li>冬の雪・除雪の負担が重い</li>
+              <li>人間関係が近く、距離感に悩むこともある</li>
             </ul>
+
+            <div class="secTitle">向いている人</div>
+            <ul class="secBody">
+              <li>不便さを「個性」と捉えられる</li>
+              <li>自然や趣味を生活の中心に置きたい</li>
+              <li>静かな環境で暮らしたい</li>
+            </ul>
+
+            <div class="secTitle">向いていない人</div>
+            <ul class="secBody">
+              <li>利便性がないと不安になる</li>
+              <li>人付き合いの濃さが苦手</li>
+              <li>冬の厳しさに耐えられない</li>
+            </ul>
+
+            <div class="secTitle">よくある後悔</div>
+            <div class="regret">「思った以上に不便で、冬がつらかった」</div>
+
+            <div class="accept">このデメリット、受け入れられますか？</div>
+
+            <button class="pickBtn" type="button" onclick="pick('rural')">この暮らしを選ぶ</button>
           </div>
         </details>
       </div>
+
     </div>
 
     <div class="ctaBox">
       <p class="note">
-        次の画面では、あなたに合う街を絞り込むための<strong>簡単な質問</strong>にお答えください。
-        <br><span class="small">※見た目がシンプルな質問画面（Googleフォーム）に移動しますが、診断は続いています。</span>
+        次の画面では、あなたに合う街を絞り込むための<strong>簡単な質問</strong>にお答えください。<br>
+        <span class="small">※見た目がシンプルな質問画面（Googleフォーム）に移動しますが、診断は続いています。</span>
       </p>
-      <button id="btn" onclick="goToForm()" disabled>▶ 診断を続ける</button>
+      <button id="continueBtn" onclick="goToForm()" disabled>▶ 診断を続ける</button>
       <div id="err" class="err" style="display:none;"></div>
     </div>
   </div>
 
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script>
-    // あなたのLIFF ID（今のまま）
+    // あなたのLIFF ID
     const LIFF_ID = "2008933375-DWTa5Pv0";
 
     // Googleフォーム（事前入力URL）
-    // entry.387322602 は「LINEユーザーID」受け皿（あなたの現状のまま）
-    // ★ entry.2055596408 は「暮らしタイプ」受け皿（あなたが追加で取得して入れる）
+    // entry.387322602 は「LINEユーザーID」受け皿（あなたの現状）
+    // ★ entry.2055596408 は「暮らしタイプ」受け皿（必ず置き換え）
     const FORM_BASE =
       "https://docs.google.com/forms/d/e/1FAIpQLSckk3iomfzetFjYC_8qb78Oh0fX9zyktOGqLGNucI_lQ0T4Ww/viewform?usp=pp_url" +
       "&entry.387322602={{USER_ID}}" +
       "&entry.2055596408={{LIFESTYLE}}";
 
-    let selected = null;
     let userId = null;
+    let selected = null;
 
-    function selectType(type) {
-      selected = type;
-      document.querySelectorAll(".card").forEach(c => {
-        c.classList.toggle("selected", c.dataset.type === type);
-      });
-      document.getElementById("btn").disabled = false;
+    function setError(msg){
+      const errEl = document.getElementById("err");
+      if (!msg){
+        errEl.style.display = "none";
+        errEl.textContent = "";
+        return;
+      }
+      errEl.textContent = msg;
+      errEl.style.display = "block";
     }
 
-    async function initLiff() {
+    function highlightSelected(){
+      ["city","middle","rural"].forEach(t=>{
+        const card = document.getElementById("card-" + t);
+        if (!card) return;
+        card.classList.toggle("selected", selected === t);
+      });
+    }
+
+    function pick(type){
+      selected = type;
+      highlightSelected();
+      document.getElementById("continueBtn").disabled = false;
+      setError(null);
+
+      // 選択したカードが画面内に収まるように少しスクロール（任意）
+      const card = document.getElementById("card-" + type);
+      if (card) card.scrollIntoView({behavior:"smooth", block:"center"});
+    }
+
+    async function initLiff(){
       await liff.init({ liffId: LIFF_ID });
 
-      if (!liff.isLoggedIn()) {
+      if (!liff.isLoggedIn()){
         liff.login();
         return;
       }
@@ -156,19 +368,15 @@
       userId = profile.userId;
     }
 
-    function goToForm() {
-      const errEl = document.getElementById("err");
-      errEl.style.display = "none";
-      errEl.textContent = "";
+    function goToForm(){
+      setError(null);
 
-      if (!userId) {
-        errEl.textContent = "LINEの認証情報が取得できませんでした。少し待ってからもう一度お試しください。";
-        errEl.style.display = "block";
+      if (!userId){
+        setError("LINEの認証情報が取得できませんでした。少し待ってからもう一度お試しください。");
         return;
       }
-      if (!selected) {
-        errEl.textContent = "暮らしタイプを選んでください。";
-        errEl.style.display = "block";
+      if (!selected){
+        setError("暮らしタイプを選んでください。");
         return;
       }
 
@@ -180,9 +388,7 @@
     }
 
     initLiff().catch(err => {
-      const errEl = document.getElementById("err");
-      errEl.textContent = "エラーが発生しました： " + err;
-      errEl.style.display = "block";
+      setError("エラーが発生しました： " + err);
     });
   </script>
 </body>
